@@ -1,0 +1,29 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": "xo",
+    
+    "overrides": [
+        {
+            "extends": [
+                "@typescript-eslint/parser",
+                "xo-typescript"
+            ],
+            "files": [
+                "*.ts",
+                "*.tsx"
+            ]
+          
+           
+        }
+    ],
+    "parserOptions": {
+        "project": ["./tsconfig.json"],
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+    }
+  
+}
