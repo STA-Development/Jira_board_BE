@@ -2,6 +2,8 @@
 import express from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import dotenv from 'dotenv'
+dotenv.config({path:__dirname+'/../.env'});
 //import sequelize from './database';
 const app = express();
 const swaggerOptions = {
@@ -71,7 +73,8 @@ sequelize.authenticate().then(() => {
 
 
 
-const PORT = 5000;
+const PORT = process.env.PORT;
+console.log(PORT);
 
 app.listen(PORT, () => {
   console.log(`Running on port ${PORT}`);
