@@ -3,12 +3,11 @@ import express,{NextFunction, Request,Response} from 'express';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import dotenv from 'dotenv'
-import {v4 as uuidv4} from 'uuid';
-//import { JiraBoard } from './api/JiraBoardData';
 dotenv.config({path:__dirname+'/../.env'});
 import sequelize, { items } from './database';
-import { JiraBoard } from './api/JiraBoardData';
-import { validationResult } from 'express-validator';
+import {router} from './routes/itemRoutes';
+
+
 const app = express();
 const swaggerOptions = {
 swaggerDefinition:{
@@ -53,77 +52,11 @@ app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(swaggerDocs));
  *       '403':
  *         description: expects is not completed
  */
+ 
 
-app.use(express.json())
+app.use(express.json());
+app.use('/api/jiraBoardData',router)
 
-app.post("/api/jiraBoardData",async(req : Request  , res : Response ) => {
-  try{
-  const record = await items.create({ ...req.body });
-  return res.json({record , msg:"item has been created successfully"});
-  }
-  catch(e){
-    return res.json({msg: "fail to create" , status: 500, route: "/api/jiraBoardData"})
-  }
- });
-
-
-app.get('/api/JiraBoardData', async(req : Request , res : Response)=> {
-  try{
-    const record = await items.findAll()
-return res.json(record);
-  }
-catch(e){
-return res.json({msg: "fail to connect" , status: 500, route: "/api/jiraBoardData"})
-}
-});
-
-
-app.get('/api/JiraBoardData/:id', async(req : Request , res : Response)=> {
-  try{
-const {id} = req.params;
-const record = await items.findOne({where:{id}})
-return res.json(record);
-  }
-catch(e){
-return res.json({msg: "fail to connect" , status: 500, route: "/api/jiraBoardData/:id"})
-}
-});
-
-app.delete('/api/JiraBoardData/:id', async(req : Request , res : Response)=>{
-try {
-const {id} = req.params;
-const record = await items.findOne({where : {id}});
-
-if(!record){
-  return res.json({msg : 'can not find existing record'});
-}
-const deletedRecord = await record.destroy();
-return res.json({record : deletedRecord});
-}
-catch(e){
-return res.json({
-msg: "fail to read",
-status:500,
-route :"/api/jiraBoardData/:id",
-})
-}
-})
-
-
-/*
-app.get("/api/jiraboard", (req , res ) => {
- res.send(JiraBoard)
-});
-app.get("/api/jiraboard/:id",(req,res) =>{
-const data = JiraBoard.find(c => c.id === parseInt(req.params.id));
-if(!data) res.status(404).send("The course with given id was not found"); //404
-res.send(data);
-})
-app.post('/JiraBoard',(req , res , next) => {
-  res.send("yeah!!!!");
-  next();
-});
-*/
 
 
 sequelize.authenticate().then(() => {
