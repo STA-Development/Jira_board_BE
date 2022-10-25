@@ -1,10 +1,7 @@
-import {body} from "express-validator";
+import Joi from 'joi';
 
-class JiraValidator {
-checkTodo() {
-return[body("title").notEmpty().withMessage("The title value should not be empty"),
-];
-}
-}
+export const ItemSchema = Joi.object({
+title : Joi.string().required(),
+description : Joi.string()
+})
 
-export default new JiraValidator();
