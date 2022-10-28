@@ -1,6 +1,5 @@
 import { Request,Response} from 'express';
 import ItemService from '../service/itemService';
-import { items } from '../database';
 
 class ItemController {
 
@@ -16,21 +15,19 @@ catch {
 }
 
 
-async read(req : Request , res : Response){
+  async read(req : Request , res : Response){
   try{
     const record = await ItemService.readItems();
- return res.json(record);
+    return res.json(record);
+  } catch (e) {
+    return res.json({msg: "fail to connect" , status: 500, route: "/api/jiraBoardData"})
   }
-catch(e){
-return res.json({msg: "fail to connect" , status: 500, route: "/api/jiraBoardData"})
-}
 }
 
 async readById(req : Request , res : Response) {
   try{
-    
     const record = await ItemService.readItemById(req);
-return res.json(record);
+    return res.json(record);
   }
   catch(e) {
     return res.json({msg: "fail to connect" , status: 500, route: "/api/jiraBoardData/:id"})
@@ -38,17 +35,19 @@ return res.json(record);
 }
 
 async update(req : Request , res : Response){
-try{
-const record = await ItemService.updateItem(req);
-return res.json(record);
-}
-catch {
-  return res.json({msg: "fail to connect" , status: 500, route: "/api/jiraBoardData/:id"})
-}
+  try{
+    const record = await ItemService.updateItem(req);
+    return res.json(record);
+  }
+  catch {
+    return res.json({msg: "fail to connect" , status: 500, route: "/api/jiraBoardData/:id"})
+  }
 
 }
+
 async deleteItems(req :Request , res : Response){
-return ItemService.deleteItems(req , res);
+  await ItemService.deleteItems(req)
+  return res.json({msg: 'Successfully removed'})
 }
 }
 export default new ItemController();
