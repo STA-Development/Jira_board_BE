@@ -7,6 +7,7 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
   ],
+  "ignorePatterns": ["/node_modules", "/tscnfig.json", "**/*.js"],
   "rules" : {
     "prettier/prettier": [
       "error",

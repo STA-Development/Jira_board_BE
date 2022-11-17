@@ -1,39 +1,26 @@
-import { Request } from 'express';
-import { items } from '../database';
-import { ItemSchema } from '../validator/validate';
-
-interface ReqItemsTypes {
-  id: number;
-  title: string;
-  description: string;
-}
-
+import { JiraColumns } from "../database/jiraColumnDatabase";
+import { Tickets } from "../database/ticketDatabase";
+import { ReqItemsTypes } from "./../libs/types";
 class TicketServie {
-  async createItems(req: Request) {
-    const result = await ItemSchema.validateAsync(req.body);
-    const reqItems: ReqItemsTypes = {
-      id: result.id,
-      title: result.title,
-      description: result.description
-    };
-    return items.create(reqItems);
+  async createItems(ticket: ReqItemsTypes) {
+    return Tickets.create(ticket);
   }
 
   async readItems() {
-    return items.findAll();
+    return Tickets.findAll({ include: JiraColumns });
+  }
+  async readOneItem(id: string) {
+    return Tickets.findOne({ where: { id } });
   }
 
-  async updateItem(req: Request) {
-    const id = req.params.id;
-    return items.update(req.body, { where: { id: id } });
+  async updateItem(JiraColumnId: number, id: number) {
+    return Tickets.update({ JiraColumnId: JiraColumnId }, { where: { id } });
   }
-
-  async deleteItems(req: Request) {
+  async deleteItems(id: number) {
     try {
-      const id = req.params.id;
-      await items.destroy({ where: { id } });
+      await Tickets.destroy({ where: { id } });
     } catch (err) {
-      throw new Error('id not Found!');
+      throw new Error("id not Found!");
     }
   }
 }
